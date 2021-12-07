@@ -24,7 +24,8 @@ public class SwaggerConverterApplication {
         FileUtils.writeStringToFile(tmp.toFile(), markup, StandardCharsets.UTF_8);
         Asciidoctor.Factory.create().convertFile(tmp.toFile(), Options.builder().attributes(Attributes.builder()
                 .linkCss(false).sectionNumbers(true).tableOfContents(Placement.LEFT).build()).build());
-        String html = FileUtils.readFileToString(new File(tmp.toString().replace(".tmp", ".html")));
+        String html = FileUtils.readFileToString(new File(tmp.toString().replace(".tmp", ".html")),
+                StandardCharsets.UTF_8);
         System.out.println(html);
     }
 }
