@@ -73,6 +73,7 @@
                             <artifactId>asciidoctorj-epub3</artifactId>
                         </dependency>
                     </requiresUnpack>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>

@@ -8,21 +8,24 @@ import org.asciidoctor.Attributes;
 import org.asciidoctor.Options;
 import org.asciidoctor.Placement;
 
-import java.net.URL;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Scanner;
 
 public class SwaggerConverterApplication {
-    @SneakyThrows
     public static void main(String[] args) {
-        String text = new Scanner(new URL(args[0]).openStream(), "UTF-8").useDelimiter("\\A").next();
+        System.out.println(swaggerToHtml(args[0]));
+    }
+
+    @SneakyThrows
+    public static String swaggerToHtml(String swagger) {
         Path tmp = Files.createTempFile(null, null);
-        String markup = Swagger2MarkupConverter.from(text).build().toString();
+        String markup = Swagger2MarkupConverter.from(swagger).build().toString();
         FileUtils.writeStringToFile(tmp.toFile(), markup, StandardCharsets.UTF_8);
         Asciidoctor.Factory.create().convertFile(tmp.toFile(), Options.builder().attributes(Attributes.builder()
                 .linkCss(false).sectionNumbers(true).tableOfContents(Placement.LEFT).build()).build());
         System.out.println(tmp.toString().replace(".tmp", ".html"));
+        return FileUtils.readFileToString(new File(tmp.toString().replace(".tmp", ".html")), StandardCharsets.UTF_8);
     }
 }
