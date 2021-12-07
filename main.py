@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 import delegator
-from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtGui
 
 
 def doConvert():
@@ -11,7 +11,7 @@ def doConvert():
     mainWindow.repaint()
     url = swaggerEdit.text()
     java = Path("jre") / "bin" / "java"
-    jar = list(Path("target").glob("*.jar"))[0]
+    jar = list(Path(".").glob("**/swagger-converter*.jar"))[0]
     command = f"{java} -jar {jar} {url}"
     response = delegator.run(command)
     assert response.return_code == 0
@@ -23,6 +23,7 @@ def doConvert():
 
 
 app = QtWidgets.QApplication()
+app.setWindowIcon(QtGui.QIcon("resources/crown.ico"))
 app.setApplicationName("Ice Spring Swagger Converter")
 app.setApplicationDisplayName(app.applicationName())
 font = app.font()

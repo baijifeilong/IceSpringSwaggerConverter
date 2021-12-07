@@ -4,3 +4,8 @@ target
 jre
 venv
 outputs
+build
+dist
+__pycache__
+*.spec
+*.7z
