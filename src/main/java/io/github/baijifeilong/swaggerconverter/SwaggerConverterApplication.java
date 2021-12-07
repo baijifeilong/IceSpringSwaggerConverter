@@ -8,7 +8,6 @@ import org.asciidoctor.Attributes;
 import org.asciidoctor.Options;
 import org.asciidoctor.Placement;
 
-import java.io.File;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -24,8 +23,6 @@ public class SwaggerConverterApplication {
         FileUtils.writeStringToFile(tmp.toFile(), markup, StandardCharsets.UTF_8);
         Asciidoctor.Factory.create().convertFile(tmp.toFile(), Options.builder().attributes(Attributes.builder()
                 .linkCss(false).sectionNumbers(true).tableOfContents(Placement.LEFT).build()).build());
-        String html = FileUtils.readFileToString(new File(tmp.toString().replace(".tmp", ".html")),
-                StandardCharsets.UTF_8);
-        System.out.println(html);
+        System.out.println(tmp.toString().replace(".tmp", ".html"));
     }
 }

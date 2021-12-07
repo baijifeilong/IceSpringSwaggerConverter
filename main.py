@@ -11,11 +11,11 @@ def doConvert():
     mainWindow.repaint()
     url = swaggerEdit.text()
     java = Path("jre") / "bin" / "java"
-    jar = list(Path(".").glob("**/swagger-converter*.jar"))[0]
+    jar = list(Path(".").glob("**/swagger-converter*.jar"))[-1]
     command = f"{java} -jar {jar} {url}"
     response = delegator.run(command)
     assert response.return_code == 0
-    html = "\n".join([x for x in response.out.strip().splitlines() if "[main]" not in x])
+    html = Path(response.out.strip().splitlines()[-1]).read_text(encoding="utf8")
     html = html.replace('<html lang="en">', '<html lang="zh">')
     htmlEdit.setPlainText(html)
     Path("outputs/doc.html").write_text(html, encoding="utf8")
