@@ -15,6 +15,7 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>8</java.version>
+        <start-class>io.github.baijifeilong.swaggerconverter.SwaggerConverterApplication</start-class>
     </properties>
     <dependencies>
         <dependency>
@@ -46,15 +47,50 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <options>
+                        <option>-dontoptimize</option>
+                        <option>-dontobfuscate</option>
+                        <option>-ignorewarnings</option>
+                        <option>-printseeds target/sss.txt</option>
+                        <option>-printusage target/uuu.txt</option>
+                        <option>-keep enum ** { *; }</option>
+                        <option>-keep class io.github.baijifeilong.** { *; }</option>
+                        <option>-keep class org.apache.commons.logging.impl.LogFactoryImpl { *; }</option>
+                        <option>-keep class org.apache.commons.logging.impl.SimpleLog { *; }</option>
+                        <option>-keep class org.pegdown.Parser { *; }</option>
+                        <option>-keep class org.parboiled.** { *; }</option>
+                        <option>-keep class org.jruby.** { *; }</option>
+                        <option>-keep class org.asciidoctor.jruby.internal.JRubyAsciidoctor { *; }</option>
+                        <option>-keep class org.asciidoctor.jruby.internal.ProcessorFactoryImpl { *; }</option>
+                        <option>-keep class org.asciidoctor.extension.Treeprocessor { *; }</option>
+                    </options>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                    </libs>
                 </configuration>
             </plugin>
         </plugins>

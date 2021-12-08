@@ -10,14 +10,18 @@ import org.asciidoctor.Options;
 import org.asciidoctor.Placement;
 
 import java.io.File;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Scanner;
 
 @Slf4j
 public class SwaggerConverterApplication {
+    @SneakyThrows
     public static void main(String[] args) {
-        System.out.println(swaggerToHtml(args[0]));
+        String text = new Scanner(new URL(args[0]).openStream(), "UTF-8").useDelimiter("\\A").next();
+        System.out.println(swaggerToHtml(text));
     }
 
     @SneakyThrows
