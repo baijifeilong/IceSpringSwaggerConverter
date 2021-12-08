@@ -1,7 +1,7 @@
 # Created by BaiJiFeiLong@gmail.com at 2021/12/7 18:05
 import os
-import pathlib
 import shutil
+from pathlib import Path
 
 import PyInstaller.__main__
 
@@ -18,18 +18,18 @@ opengl32sw.dll
 """.strip().splitlines()
 
 print("Building...")
-if pathlib.Path("dist").exists():
+if Path("dist").exists():
     print("Folder dist exists, removing...")
     shutil.rmtree("dist")
 
-if pathlib.Path(f"{name}.7z").exists():
+if Path(f"{name}.7z").exists():
     print("Target archive exists, removing...")
-    pathlib.Path(f"{name}.7z").unlink()
+    Path(f"{name}.7z").unlink()
 
 print("\nBuilding jar...")
-os.system("mvn package -DskipTests")
+os.system("mvn -DskipTests package dependency:copy-dependencies")
 
-print("\nPacking...")
+print("\nPackaging...")
 PyInstaller.__main__.run([
     "main.py",
     "--noconsole",
@@ -37,22 +37,32 @@ PyInstaller.__main__.run([
     "--name",
     name,
     "--ico",
-    "resources/crown.ico",
-    "--add-data",
-    "resources;resources",
+    "resources/crown.ico"
 ])
+
+print("\nCopying resources...")
+shutil.copytree("resources", f"dist/{name}/resources")
+
+print("\nRemoving unused resources...")
+for file in Path(f"dist/{name}/resources").glob("**/*"):
+    if file.name in ["crown.png"]:
+        print(f"\tRemoving {file}...")
+        file.unlink()
 
 print("\nCopying JRE...")
 shutil.copytree("jre", f"dist/{name}/jre")
 
-print("\nCopying jar...")
-jar = list(pathlib.Path(".").glob("**/swagger-converter*.jar"))[0]
-shutil.copy(jar, f"dist/{name}")
+print("\nCopying dependency jars...")
+shutil.copytree("target/dependency", f"dist/{name}/jars")
+
+print("\nCopying main jar...")
+jar = next(Path("target").glob("swagger-converter*.jar"))
+shutil.copy(jar, f"dist/{name}/jars")
 
 print("\nCleaning...")
-for file in pathlib.Path("dist").glob("*/*"):
+for file in Path("dist").glob("*/*"):
     if file.name in excluded_files:
-        print(f"Removing {file.name}")
+        print(f"\tRemoving {file.name}...")
         file.unlink()
 
 print("\nCompressing...")

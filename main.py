@@ -1,22 +1,29 @@
 # Created by BaiJiFeiLong@gmail.com at 2021/12/7 16:48
 import os
+import urllib.request
 from pathlib import Path
 
-import delegator
+import jpype
 from PySide2 import QtWidgets, QtGui
+
+
+def swaggerToHtml(swagger: str) -> str:
+    jarsDir = Path("target") if Path("target").exists() else Path("jars")
+    jars = ";".join(map(str, jarsDir.glob("**/*.jar")))
+    jvm = str(sorted(Path("jre").glob("**/jvm.*"), key=lambda x: x.stat().st_size)[-1])
+    jpype.startJVM(jvm, f"-Djava.class.path={jars}")
+    clazz = jpype.JClass("io.github.baijifeilong.swaggerconverter.SwaggerConverterApplication")
+    html = clazz.swaggerToHtml(swagger)[:]
+    jpype.shutdownJVM()
+    return html
 
 
 def doConvert():
     mainWindow.statusBar().showMessage("Converting...")
     mainWindow.repaint()
     url = swaggerEdit.text()
-    java = Path("jre") / "bin" / "java"
-    jar = list(Path(".").glob("**/swagger-converter*.jar"))[-1]
-    command = f"{java} -jar {jar} {url}"
-    response = delegator.run(command)
-    assert response.return_code == 0
-    html = Path(response.out.strip().splitlines()[-1]).read_text(encoding="utf8")
-    html = html.replace('<html lang="en">', '<html lang="zh">')
+    swaggerJson = urllib.request.urlopen(url).read().decode("utf8")
+    html = swaggerToHtml(swaggerJson).replace('<html lang="en">', '<html lang="zh">')
     htmlEdit.setPlainText(html)
     Path("outputs/doc.html").write_text(html, encoding="utf8")
     mainWindow.statusBar().showMessage("Converted.")
