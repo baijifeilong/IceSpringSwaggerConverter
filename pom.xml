@@ -55,25 +55,6 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                    <requiresUnpack>
-                        <dependency>
-                            <groupId>org.jruby</groupId>
-                            <artifactId>jruby-complete</artifactId>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.asciidoctor</groupId>
-                            <artifactId>asciidoctorj</artifactId>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.asciidoctor</groupId>
-                            <artifactId>asciidoctorj-pdf</artifactId>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.asciidoctor</groupId>
-                            <artifactId>asciidoctorj-epub3</artifactId>
-                        </dependency>
-                    </requiresUnpack>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
