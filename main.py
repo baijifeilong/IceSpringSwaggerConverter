@@ -8,8 +8,7 @@ from PySide2 import QtWidgets, QtGui
 
 
 def swaggerToHtml(swagger: str) -> str:
-    jarsDir = Path("target") if Path("target").exists() else Path("jars")
-    jars = ";".join(map(str, jarsDir.glob("**/*.jar")))
+    jars = ";".join(map(str, Path("jars").glob("**/*.jar")))
     jvm = str(sorted(Path("jre").glob("**/jvm.*"), key=lambda x: x.stat().st_size)[-1])
     jpype.startJVM(jvm, f"-Djava.class.path={jars}")
     clazz = jpype.JClass("io.github.baijifeilong.swaggerconverter.SwaggerConverterApplication")
