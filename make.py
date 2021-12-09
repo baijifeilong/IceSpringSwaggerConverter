@@ -23,7 +23,7 @@ os.system("busybox rm -rf dist")
 logging.info(f"Removing {name}.7z if exists...")
 os.system(f"busybox rm -rf {name}.7z")
 
-jar = next(Path().glob("target/swagger-converter-*-SNAPSHOT.jar"))
+jar = next(Path().glob("target/tmp/swagger-converter-*-SNAPSHOT.jar"))
 logging.info("Target jar: %s", jar)
 
 command = f"main.py --noconsole --noupx --name {name} --ico resources/crown.ico " \

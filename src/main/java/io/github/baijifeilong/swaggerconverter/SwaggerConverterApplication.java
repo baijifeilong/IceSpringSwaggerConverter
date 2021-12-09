@@ -14,13 +14,15 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Scanner;
 
 @Slf4j
 public class SwaggerConverterApplication {
     @SneakyThrows
     public static void main(String[] args) {
-        String text = new Scanner(new URL(args[0]).openStream(), "UTF-8").useDelimiter("\\A").next();
+        String url = Arrays.stream(args).findFirst().orElse("http://localhost:8080/v2/api-docs");
+        String text = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\\A").next();
         System.out.println(swaggerToHtml(text));
     }
 

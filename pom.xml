@@ -79,22 +79,51 @@
                         <option>-printusage target/uuu.txt</option>
                         <option>-keep enum ** { *; }</option>
                         <option>-keep class io.github.baijifeilong.** { *; }</option>
-                        <option>-keep class org.apache.commons.logging.impl.LogFactoryImpl { *; }</option>
-                        <option>-keep class org.apache.commons.logging.impl.SimpleLog { *; }</option>
-                        <option>-keep class org.pegdown.Parser { *; }</option>
+                        <option>-keep class org.apache.commons.logging.** { *; }</option>
+                        <option>-keep class org.pegdown.** { *; }</option>
                         <option>-keep class org.parboiled.** { *; }</option>
                         <option>-keep class org.jruby.** { *; }</option>
-                        <option>-keep class org.asciidoctor.jruby.internal.JRubyAsciidoctor { *; }</option>
-                        <option>-keep class org.asciidoctor.jruby.internal.ProcessorFactoryImpl { *; }</option>
-                        <option>-keep class org.asciidoctor.extension.Treeprocessor { *; }</option>
+                        <option>-keep class org.asciidoctor.** { *; }</option>
                     </options>
                     <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${java.home}/jmods</lib>
                     </libs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <compress>false</compress>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>Java8OrLower</id>
+            <activation>
+                <jdk>(,1.8]</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <configuration>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                            </libs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>
