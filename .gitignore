@@ -10,3 +10,4 @@ __pycache__
 *.spec
 *.7z
 /dependency-reduced-pom.xml
+swagger.html
